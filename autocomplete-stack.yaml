@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  AutocompleteLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: "autocomplete"
+      RetentionInDays: 3653
+  LogStream:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: "autocomplete"
+      LogStreamName: "analytics-logs"
+    DependsOn: AutocompleteLogGroup
