@@ -1,16 +1,21 @@
 from flask import request
-from flask.views import MethodView
 from mongoengine import ValidationError
 
 from database.models import Word, Trie
 from schemas import WordSchema
 from utils.aws import log_to_cloudwatch
+from utils.cors import MethodViewWithCors, cors
 
 
-class SearchView(MethodView):
-    def get(self, word_id):
+class SearchView(MethodViewWithCors):
+    @cors
+    def get(self):
+        query_string = request.args
+
+        query = query_string.get("query", "")
+
         try:
-            word = Word.objects.get(id=word_id)
+            word = Word.objects.get(word=query)
         except (Word.DoesNotExist, ValidationError):
             return {
                 "error": "Not found"
@@ -22,7 +27,8 @@ class SearchView(MethodView):
         return schema.dump(word), 200
 
 
-class AutocompleteView(MethodView):
+class AutocompleteView(MethodViewWithCors):
+    @cors
     def get(self):
         query_string = request.args
 

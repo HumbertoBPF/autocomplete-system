@@ -11,7 +11,7 @@ class WordCounter(EmbeddedDocument):
 
 
 class Word(Document):
-    word = StringField(required=True)
+    word = StringField(required=True, unique=True)
     meanings = ListField(EmbeddedDocumentField(Meaning))
 
 
